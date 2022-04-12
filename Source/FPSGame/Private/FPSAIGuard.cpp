@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FPSAIGuard.h"
 #include "DrawDebugHelpers.h"
 #include "FPSGameMode.h"
+#include "UnrealNetwork.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 // Sets default values
@@ -47,6 +47,11 @@ void AFPSAIGuard::Tick(float DeltaTime)
 			MoveToNextPatrolPoint();
 		}
 	}
+}
+
+void AFPSAIGuard::OnRep_GuardState()
+{
+	OnStateChanged(GuardState);
 }
 
 void AFPSAIGuard::HandlePawnSeen(APawn* SeenPawn)
@@ -130,7 +135,7 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 	}
 
 	GuardState = NewState;
-	OnStateChanged(NewState);
+	OnRep_GuardState();
 }
 
 void AFPSAIGuard::MoveToNextPatrolPoint()
@@ -145,4 +150,11 @@ void AFPSAIGuard::MoveToNextPatrolPoint()
 	}
 
 	UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
+}
+
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFPSAIGuard, GuardState);
 }
