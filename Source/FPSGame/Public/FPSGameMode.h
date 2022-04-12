@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 
-#include <Actor.h>
-
 #include "GameFramework/GameModeBase.h"
 #include "FPSGameMode.generated.h"
 
